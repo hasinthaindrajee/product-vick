@@ -33,6 +33,19 @@ public class CellStsConfiguration {
 
     private String cellName;
 
+    private String globalJWKEndpoint;
+
+    public String getGlobalJWKEndpoint() {
+
+        return globalJWKEndpoint;
+    }
+
+    public CellStsConfiguration setGlobalJWKEndpoint(String globalJWKEndpoint) {
+
+        this.globalJWKEndpoint = globalJWKEndpoint;
+        return this;
+    }
+
     public String getStsEndpoint() {
         return stsEndpoint;
     }

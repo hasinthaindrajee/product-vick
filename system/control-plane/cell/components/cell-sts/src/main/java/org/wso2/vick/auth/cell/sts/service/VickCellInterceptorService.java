@@ -223,20 +223,20 @@ public abstract class VickCellInterceptorService extends AuthorizationGrpc.Autho
     }
 
     private RequestSource buildRequestSource(ExternalAuth.CheckRequest checkRequest) {
-//        AttributesOuterClass.Attributes attributesFromRequest = getAttributesFromRequest(checkRequest);
+        AttributesOuterClass.Attributes attributesFromRequest = getAttributesFromRequest(checkRequest);
         RequestSource.RequestSourceBuilder requestSourceBuilder = new RequestSource.RequestSourceBuilder();
-//        if (attributesFromRequest != null) {
-//            AttributesOuterClass.Attributes.AttributeValue sourceId =
-//                    attributesFromRequest.getAttributesMap().get("source.uid");
-//            if (sourceId != null) {
-//                // "source.uid" -> "kubernetes://hr--hr-deployment-596946948d-vvgln.default"
-//                String sourceUid = sourceId.getStringValue();
-//                String sourceWorkloadName = sourceUid.replace("kubernetes://", "");
-//
-//                requestSourceBuilder.setWorkload(sourceWorkloadName)
-//                        .setCellName(extractCellNameFromWorkloadName(sourceWorkloadName));
-//            }
-//        }
+        if (attributesFromRequest != null) {
+            AttributesOuterClass.Attributes.AttributeValue sourceId =
+                    attributesFromRequest.getAttributesMap().get("source.uid");
+            if (sourceId != null) {
+                // "source.uid" -> "kubernetes://hr--hr-deployment-596946948d-vvgln.default"
+                String sourceUid = sourceId.getStringValue();
+                String sourceWorkloadName = sourceUid.replace("kubernetes://", "");
+
+                requestSourceBuilder.setWorkload(sourceWorkloadName)
+                        .setCellName(extractCellNameFromWorkloadName(sourceWorkloadName));
+            }
+        }
         return requestSourceBuilder.build();
     }
 

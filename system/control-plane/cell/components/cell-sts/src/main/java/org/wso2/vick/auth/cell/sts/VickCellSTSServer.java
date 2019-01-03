@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ *
+ */
+
 package org.wso2.vick.auth.cell.sts;
 
 import io.grpc.Server;
@@ -8,6 +27,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.vick.auth.cell.jwks.JWKSServer;
 import org.wso2.vick.auth.cell.sts.context.store.UserContextStore;
 import org.wso2.vick.auth.cell.sts.context.store.UserContextStoreImpl;
 import org.wso2.vick.auth.cell.sts.model.config.CellStsConfiguration;
@@ -32,6 +52,7 @@ public class VickCellSTSServer {
     private static final String CONFIG_STS_ENDPOINT = "endpoint";
     private static final String CONFIG_AUTH_USERNAME = "username";
     private static final String CONFIG_AUTH_PASSWORD = "password";
+    private static final String CONFIG_GLOBAL_JWKS = "globalJWKS";
 
     private static final Logger log = LoggerFactory.getLogger(VickCellSTSServer.class);
     private final int inboundListeningPort;
@@ -46,8 +67,9 @@ public class VickCellSTSServer {
         log.info("Cell STS configuration:\n" + stsConfig);
 
         UserContextStore contextStore = new UserContextStoreImpl();
+        UserContextStore localContextStore = new UserContextStoreImpl();
 
-        VickCellStsService cellStsService = new VickCellStsService(stsConfig, contextStore);
+        VickCellStsService cellStsService = new VickCellStsService(stsConfig, contextStore, localContextStore);
 
         this.inboundListeningPort = inboundListeningPort;
         inboundListener = ServerBuilder.forPort(inboundListeningPort)
@@ -60,7 +82,6 @@ public class VickCellSTSServer {
                 .build();
     }
 
-
     private CellStsConfiguration buildCellStsConfiguration() throws VickCellSTSException {
 
         try {
@@ -72,7 +93,9 @@ public class VickCellSTSServer {
                     .setCellName(getMyCellName())
                     .setStsEndpoint((String) config.get(CONFIG_STS_ENDPOINT))
                     .setUsername((String) config.get(CONFIG_AUTH_USERNAME))
-                    .setPassword((String) config.get(CONFIG_AUTH_PASSWORD));
+                    .setPassword((String) config.get(CONFIG_AUTH_PASSWORD))
+                    .setGlobalJWKEndpoint((String) config.get
+                            (CONFIG_GLOBAL_JWKS));
         } catch (ParseException | IOException e) {
             throw new VickCellSTSException("Error while setting up STS configurations", e);
         }
@@ -144,6 +167,8 @@ public class VickCellSTSServer {
         try {
             server = new VickCellSTSServer(8080, 8081);
             server.start();
+            JWKSServer dataServer = new JWKSServer();
+            dataServer.startServer();
             server.blockUntilShutdown();
         } catch (Exception e) {
             log.error("Error while starting up the Cell STS.", e);
