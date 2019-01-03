@@ -140,16 +140,6 @@ public abstract class VickCellInterceptorService extends AuthorizationGrpc.Autho
                 .build();
     }
 
-    protected String getDestination(CellStsRequest request) {
-
-        String destination = request.getRequestHeaders().get(DESTINATION_HEADER);
-        if (StringUtils.isBlank(destination)) {
-            destination = request.getRequestContext().getHost();
-            log.debug("Destination is picked from host value in the request.");
-        }
-        return destination;
-    }
-
     private String getRequestId(ExternalAuth.CheckRequest request) throws VickCellSTSException {
 
         String id = request.getAttributes().getRequest().getHttp().getHeadersMap().get(REQUEST_ID_HEADER);
@@ -159,13 +149,25 @@ public abstract class VickCellInterceptorService extends AuthorizationGrpc.Autho
         return id;
     }
 
-
     private String getDestination(ExternalAuth.CheckRequest request) {
 
-        String destination = request.getAttributes().getRequest().getHttp().getHeadersMap().get(DESTINATION_HEADER);
-        if (StringUtils.isBlank(destination)) {
-            destination = request.getAttributes().getRequest().getHttp().getHost();
-            log.debug("Destination is picked from host value in the request.");
+        String destination = "";
+
+        AttributesOuterClass.Attributes attributesFromRequest = getAttributesFromRequest(request);
+        if (attributesFromRequest != null) {
+            AttributesOuterClass.Attributes.AttributeValue attributeValue =
+                    attributesFromRequest.getAttributesMap().get("destination.service.name");
+            if (attributeValue != null) {
+                destination = attributeValue.getStringValue();
+            }
+        }
+        if (StringUtils.isEmpty(destination)) {
+            log.debug("Destination cannot be found in request attributes.");
+            destination = request.getAttributes().getRequest().getHttp().getHeadersMap().get(DESTINATION_HEADER);
+            if (StringUtils.isBlank(destination)) {
+                destination = request.getAttributes().getRequest().getHttp().getHost();
+                log.debug("Destination is picked from host value in the request.");
+            }
         }
         return destination;
     }

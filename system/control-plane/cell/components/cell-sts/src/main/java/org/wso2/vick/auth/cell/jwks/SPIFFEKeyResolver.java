@@ -24,6 +24,9 @@ import java.security.PublicKey;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
+/**
+ * Resolves keys derived in the format of SPIFFE
+ */
 public class SPIFFEKeyResolver extends StaticKeyResolver {
 
     @Override

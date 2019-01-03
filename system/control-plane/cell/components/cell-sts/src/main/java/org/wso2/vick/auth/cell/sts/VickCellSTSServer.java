@@ -164,17 +164,30 @@ public class VickCellSTSServer {
     public static void main(String[] args) {
 
         VickCellSTSServer server;
+        int inboundListeningPort = getPortFromEnvVariable("inboundPort", 8080);
+        int outboundListeningPort = getPortFromEnvVariable("outboundPort", 8081);;
+        int jwksEndpointPort = getPortFromEnvVariable("jwksPort", 8090);
+
         try {
-            server = new VickCellSTSServer(8080, 8081);
+            server = new VickCellSTSServer(inboundListeningPort, outboundListeningPort);
             server.start();
-            JWKSServer dataServer = new JWKSServer();
-            dataServer.startServer();
+            JWKSServer jwksServer = new JWKSServer(jwksEndpointPort);
+            jwksServer.startServer();
             server.blockUntilShutdown();
         } catch (Exception e) {
             log.error("Error while starting up the Cell STS.", e);
             // To make the pod go to CrashLoopBackOff state if we encounter any error while starting up
             System.exit(1);
         }
+    }
+
+    private static int getPortFromEnvVariable(String name, int defaultPort) {
+
+        if (StringUtils.isNotEmpty(System.getenv(name))) {
+            defaultPort = Integer.parseInt(System.getenv(name));
+        }
+        log.info("Port for {} : {}", name, defaultPort);
+        return defaultPort;
     }
 
 }

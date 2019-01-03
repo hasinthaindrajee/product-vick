@@ -23,13 +23,20 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 
+/**
+ * Resolves keys using self signed keys.
+ */
 public class SelfSignedKeyResolver implements KeyResolver {
 
     SelfSignedCertGenerator selfSignedCertGenerator;
 
-    public SelfSignedKeyResolver(String commonName) {
+    public SelfSignedKeyResolver(String commonName) throws KeyResolverException {
 
-        selfSignedCertGenerator = new SelfSignedCertGenerator(commonName);
+        try {
+            selfSignedCertGenerator = new SelfSignedCertGenerator(commonName);
+        } catch (Exception e) {
+            throw new KeyResolverException("Error while resolving keys", e);
+        }
     }
 
     @Override

@@ -26,6 +26,9 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 
+/**
+ * Generates and stores self signed certificates.
+ */
 public class SelfSignedCertGenerator {
 
     private PrivateKey privateKey;
@@ -47,21 +50,17 @@ public class SelfSignedCertGenerator {
         return publicKey;
     }
 
-    public SelfSignedCertGenerator(String commonName) {
+    public SelfSignedCertGenerator(String commonName) throws Exception {
 
-        try {
-            CertAndKeyGen keyGen = new CertAndKeyGen("RSA", "SHA1WithRSA", null);
-            keyGen.generate(2048);
+        CertAndKeyGen keyGen = new CertAndKeyGen("RSA", "SHA1WithRSA", null);
+        keyGen.generate(2048);
 
-            this.privateKey = keyGen.getPrivateKey();
-            this.publicKey = keyGen.getPublicKey();
-            //Generate self signed certificate
-            X509Certificate[] chain = new X509Certificate[1];
-            chain[0] = keyGen.getSelfCertificate(new X500Name("CN=" + commonName), (long) 365 * 24 * 3600);
-            this.certificate = chain[0];
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        this.privateKey = keyGen.getPrivateKey();
+        this.publicKey = keyGen.getPublicKey();
+        //Generate self signed certificate
+        X509Certificate[] chain = new X509Certificate[1];
+        chain[0] = keyGen.getSelfCertificate(new X500Name("CN=" + commonName), (long) 365 * 24 * 3600);
+        this.certificate = chain[0];
     }
 
 }

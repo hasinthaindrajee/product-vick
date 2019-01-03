@@ -44,7 +44,7 @@ import java.util.Map;
 /**
  * Validate JWT using Identity Provider's jwks_uri.
  */
-public class JWKSBasedJWTValidator implements JWTValidator {
+public class JWKSBasedJWTValidator implements JWTSignatureValidator {
 
     private static final Log log = LogFactory.getLog(JWKSBasedJWTValidator.class);
     private ConfigurableJWTProcessor<SecurityContext> jwtProcessor;

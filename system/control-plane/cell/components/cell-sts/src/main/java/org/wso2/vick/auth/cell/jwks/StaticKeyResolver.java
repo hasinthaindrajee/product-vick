@@ -26,6 +26,9 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 
+/**
+ * Resolves static stored keys. (Stored somewhere. eg file system)
+ */
 public abstract class StaticKeyResolver implements KeyResolver {
 
     protected static Certificate buildCertificate(String publicKeyString) throws CertificateException {

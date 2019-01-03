@@ -19,6 +19,9 @@
 
 package org.wso2.vick.auth.cell.sts.exception;
 
+/**
+ * Exception used to convey JWT validation failures.
+ */
 public class JWTValidationFailedException extends Exception {
 
     public JWTValidationFailedException(String errorMessage, Throwable throwable) {

@@ -17,44 +17,89 @@
  */
 
 import AppLayout from "./AppLayout";
-import Cell from "./pages/Cell";
-import MicroService from "./pages/MicroService";
-import Overview from "./pages/Overview";
-import PropTypes from "prop-types";
+import Cells from "./pages/cells";
+import {ColorProvider} from "./pages/common/color";
+import ErrorBoundary from "./pages/common/error/ErrorBoundary";
+import NotFound from "./pages/common/error/NotFound";
+import Overview from "./pages/overview";
 import React from "react";
 import SignIn from "./pages/SignIn";
-import Tracing from "./pages/tracing/Tracing";
-import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
+import SystemMetrics from "./pages/systemMetrics";
+import Tracing from "./pages/tracing";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
+import {MuiThemeProvider, createMuiTheme} from "@material-ui/core/styles";
+import withGlobalState, {StateHolder, StateProvider} from "./pages/common/state";
+import * as PropTypes from "prop-types";
 
-class App extends React.Component {
+class StatelessProtectedPortal extends React.Component {
 
-    render() {
-        const user = this.props.username ? this.props.username : localStorage.getItem("username");
-        return (
-            <BrowserRouter>
-                {
-                    user
-                        ? (
-                            <AppLayout username={user}>
-                                <Switch>
-                                    <Route exact path="/" component={Overview}/>
-                                    <Route exact path="/cells" component={Cell}/>
-                                    <Route exact path="/micro-services" component={MicroService}/>
-                                    <Route path="/tracing" component={Tracing}/>
-                                    <Redirect from="/*" to="/"/>
-                                </Switch>
-                            </AppLayout>
-                        )
-                        : <SignIn/>
-                }
-            </BrowserRouter>
-        );
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isAuthenticated: Boolean(props.globalState.get(StateHolder.USER))
+        };
+
+        props.globalState.addListener(StateHolder.USER, this.handleUserChange);
     }
+
+    handleUserChange = (userKey, oldUser, newUser) => {
+        this.setState({
+            isAuthenticated: Boolean(newUser)
+        });
+    };
+
+    render = () => {
+        const {isAuthenticated} = this.state;
+        return isAuthenticated
+            ? (
+                <AppLayout>
+                    <ErrorBoundary>
+                        <Switch>
+                            <Route exact path="/" component={Overview}/>
+                            <Route path="/cells" component={Cells}/>
+                            <Route path="/tracing" component={Tracing}/>
+                            <Route path="/system-metrics" component={SystemMetrics}/>
+                            <Route path="/*" component={NotFound}/>
+                        </Switch>
+                    </ErrorBoundary>
+                </AppLayout>
+            )
+            : <SignIn/>;
+    };
 
 }
 
-App.propTypes = {
-    username: PropTypes.string
+StatelessProtectedPortal.propTypes = {
+    globalState: PropTypes.instanceOf(StateHolder).isRequired
 };
+
+const ProtectedPortal = withGlobalState(StatelessProtectedPortal);
+
+// Create the main theme of the App
+const theme = createMuiTheme({
+    typography: {
+        useNextVariants: true
+    }
+});
+
+/**
+ * The Observability Main App.
+ *
+ * @returns {React.Component} App react component
+ */
+const App = () => (
+    <MuiThemeProvider theme={theme}>
+        <ErrorBoundary>
+            <ColorProvider>
+                <StateProvider>
+                    <BrowserRouter>
+                        <ProtectedPortal/>
+                    </BrowserRouter>
+                </StateProvider>
+            </ColorProvider>
+        </ErrorBoundary>
+    </MuiThemeProvider>
+);
 
 export default App;

@@ -58,6 +58,11 @@
                 <version>${siddhi.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.datasources</groupId>
+                <artifactId>org.wso2.carbon.datasource.core</artifactId>
+                <version>${carbon.datasource.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.siddhi</groupId>
                 <artifactId>siddhi-query-compiler</artifactId>
                 <version>${siddhi.version}</version>
@@ -123,6 +128,16 @@
                 <version>${open.tracing.version}</version>
             </dependency>
             <dependency>
+                <groupId>io.opentracing</groupId>
+                <artifactId>opentracing-util</artifactId>
+                <version>${open.tracing.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.zipkin.brave</groupId>
+                <artifactId>brave</artifactId>
+                <version>${brave.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.opentracing.brave</groupId>
                 <artifactId>brave-opentracing</artifactId>
                 <version>${brave.open.tracing.version}</version>
@@ -137,8 +152,23 @@
                 <artifactId>zipkin-sender-urlconnection</artifactId>
                 <version>${zipkin.reporter.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.zipkin.reporter2</groupId>
+                <artifactId>zipkin-sender-okhttp3</artifactId>
+                <version>${zipkin.reporter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okio</groupId>
+                <artifactId>okio</artifactId>
+                <version>${okio.version}</version>
+            </dependency>
 
-            <!--Auth components-->
+            <!-- APIM docker image dependencies -->
             <dependency>
                 <groupId>org.wso2.vick</groupId>
                 <artifactId>org.wso2.vick.auth.extensions</artifactId>
@@ -149,9 +179,25 @@
                 <artifactId>org.wso2.vick.auth.sts.core</artifactId>
                 <version>${vick.version}</version>
             </dependency>
-            <!-- End of Auth components -->
+            <dependency>
+                <groupId>org.wso2.vick</groupId>
+                <artifactId>org.wso2.vick.auth.sts.endpoint</artifactId>
+                <version>${vick.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.vick</groupId>
+                <artifactId>org.wso2.vick.tracing.synapse.handler</artifactId>
+                <version>${vick.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.vick</groupId>
+                <artifactId>org.wso2.vick.auth.sts.endpoint</artifactId>
+                <version>${vick.version}</version>
+                <type>war</type>
+            </dependency>
+            <!-- End of APIM docker image dependencies -->
 
-            <!-- SP Woker docker images dependencies -->
+            <!-- SP Worker docker images dependencies -->
             <dependency>
                 <groupId>org.wso2.vick</groupId>
                 <artifactId>org.wso2.vick.telemetry.receiver</artifactId>
@@ -182,59 +228,40 @@
                 <artifactId>protobuf-wso2</artifactId>
                 <version>${protobuf.wso2.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.extension.siddhi.io.http</groupId>
+                <artifactId>siddhi-io-http</artifactId>
+                <version>${siddhi.io.http.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.vick</groupId>
+                <artifactId>org.wso2.vick.observability.api</artifactId>
+                <version>${vick.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.vick</groupId>
+                <artifactId>org.wso2.vick.observability.model.generator</artifactId>
+                <version>${vick.version}</version>
+            </dependency>
             <!-- End of SP Worker docker images dependencies -->
 
-            <!--SP Dashboard images dependencies-->
+            <!--Observability API dependencies-->
             <dependency>
-                <groupId>org.wso2.vick</groupId>
-                <artifactId>org.wso2.vick.widgets.opentracing</artifactId>
-                <version>${vick.version}</version>
-                <type>zip</type>
+                <groupId>org.wso2.msf4j</groupId>
+                <artifactId>msf4j-core</artifactId>
+                <version>${msf4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.vick</groupId>
-                <artifactId>org.wso2.vick.widgets.latency.comparison</artifactId>
-                <version>${vick.version}</version>
-                <type>zip</type>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>20.0</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.vick</groupId>
-                <artifactId>org.wso2.vick.widgets.latency.time</artifactId>
-                <version>${vick.version}</version>
-                <type>zip</type>
+                <groupId>io.kubernetes</groupId>
+                <artifactId>client-java</artifactId>
+                <version>3.0.0</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.vick</groupId>
-                <artifactId>org.wso2.vick.widgets.request.count.comparison</artifactId>
-                <version>${vick.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.vick</groupId>
-                <artifactId>org.wso2.vick.widgets.request.count.filter</artifactId>
-                <version>${vick.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.vick</groupId>
-                <artifactId>org.wso2.vick.widgets.request.count.time</artifactId>
-                <version>${vick.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.vick</groupId>
-                <artifactId>org.wso2.vick.widgets.request.statistics</artifactId>
-                <version>${vick.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.vick</groupId>
-                <artifactId>org.wso2.vick.widgets.response.code.filter</artifactId>
-                <version>${vick.version}</version>
-                <type>zip</type>
-            </dependency>
-            <!--End of dashboard dependencies-->
-
+            <!--End of Observability API dependencies-->
         </dependencies>
     </dependencyManagement>
 
@@ -249,9 +276,15 @@
                         <obrRepository>NONE</obrRepository>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>com.spotify</groupId>
+                    <artifactId>dockerfile-maven-plugin</artifactId>
+                    <version>1.4.9</version>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
+
     <properties>
         <maven.checkstyleplugin.version>2.17</maven.checkstyleplugin.version>
         <maven.checkstyle.version>7.8.2</maven.checkstyle.version>
@@ -261,8 +294,12 @@
         <commons.io.version>2.6</commons.io.version>
         <protobuf.wso2.version>3.6.1.wso2v1</protobuf.wso2.version>
         <vick.version>${project.version}</vick.version>
+        <msf4j.version>2.6.4</msf4j.version>
+        <guave.version>20.0</guave.version>
+        <kubernetes.client.version>3.0.0</kubernetes.client.version>
+        <carbon.datasource.version>1.1.4</carbon.datasource.version>
 
-        <!-- external jars for receiver -->
+        <!-- External Jars for Telemetry Receiver -->
         <protobuf.java.version>3.6.1</protobuf.java.version>
         <grpc.stub.version>1.15.0</grpc.stub.version>
         <proto.google.common.proto>1.12.0</proto.google.common.proto>
@@ -270,15 +307,21 @@
         <grpc.wso2.version>1.15.0.wso2v1</grpc.wso2.version>
         <opencensus.version>0.16.1</opencensus.version>
 
-        <!-- External Jars for Tracing Synapse Handler -->
+        <!-- External Jars for Tracing Utilization -->
         <zipkin.version>2.11.6</zipkin.version>
         <zipkin.reporter.version>2.5.0</zipkin.reporter.version>
         <thrift.version>0.10.0</thrift.version>
         <synapse.core.version>2.1.7-wso2v80</synapse.core.version>
         <open.tracing.version>0.31.0</open.tracing.version>
+        <brave.version>4.17.1</brave.version>
         <brave.open.tracing.version>0.29.0</brave.open.tracing.version>
+        <okhttp.version>3.11.0</okhttp.version>
+        <okio.version>1.14.0</okio.version>
 
-         <!--Docker repo name - By default wso2vick-->
+        <!-- SP Worker Connectors -->
+        <siddhi.io.http.version>1.0.41</siddhi.io.http.version>
+
+        <!-- Docker Repository Name -->
         <docker.repo.name>wso2vick</docker.repo.name>
     </properties>
 </project>

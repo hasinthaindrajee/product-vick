@@ -1,106 +1,59 @@
-## VICK Guide: Minikube
+# VICK
 
-### Prerequisite
+[![Go Report Card](https://goreportcard.com/badge/github.com/wso2/product-vick)](https://goreportcard.com/report/github.com/wso2/product-vick)
 
-* Kubernetes v1.10.5 cluster with Istio 1.0.1 installed or Kubernetes v1.11.3 cluster with Istio 1.0.2 installed.
-* Kubernetes network plugin. (Ex: Calico)
- 
-<!--
-###Starting a cluster
- 
-    minikube start --memory=8192 --cpus=4 --kubernetes-version=v1.10.5 --bootstrapper=kubeadm --extra-config=controller-manager.cluster-signing-cert-file="/var/lib/localkube/certs/ca.crt" --extra-config=controller-manager.cluster-signing-key-file="/var/lib/localkube/certs/ca.key" --extra-config=apiserver.admission-control="LimitRanger,NamespaceExists,NamespaceLifecycle,ResourceQuota,ServiceAccount,DefaultStorageClass,MutatingAdmissionWebhook"
-    
-### Installing Istio
+VICK is a virtual distributed computer, that is optimised for agile development, deployment and operations of [cell-based](https://wso2.com/blogs/thesource/2018/07/introducing-the-wso2-integration-agile-platform/) integration applications, running at scale.
 
-    curl -L https://raw.githubusercontent.com/knative/serving/master/third_party/istio-1.0.1/istio.yaml   | sed 's/LoadBalancer/NodePort/'   | kubectl apply -f -
-    
-* Wait until istio pods get started. Run following for check pod status
-    
-        kubectl get pods -n istio-system 
--->
-        
+## Installation Guide
+
+VICK installation guide provides you steps to deploy VICK to a production grade K8s cluster and steps to deploy VICK environment for development purposes. 
+
+## Steps to Deploy Single Node VICK Developer Environment
+
+### Minimum System Requirements 
+
+* CPU with minimum 4  cores
+* 8 GB RAM
+* Ubuntu 16.04 OS with SWAP disabled
+
 ### Installing VICK
-
-    kubectl apply -f https://raw.githubusercontent.com/wso2/product-vick/master/build/target/vick.yaml
+Run the following command to install VICK and K8s on Ubunut Linux 16.04. This script uses [kubeadm](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/) tool to deploy K8s.
+User has the option to install MySQL Server before installing the VICK or point the VICK installation to an existing MySQL server deployment. 
     
-* Wait until vick controller get started. Run the following command for watch the pod status
-
-        watch kubectl get pods -n vick-system
-
-### Creating a Cell
-
-Apply the following yaml to create a sample cell
-
-```yaml
-apiVersion: vick.wso2.com/v1alpha1
-kind: Cell
-metadata:
-  name: my-cell
-spec:
-  # Currently not applied
-  gateway:
-    http:
-      port: 80
-      routes:
-      - match:
-        - uri: /foo
-        - uri: /bar
-        service: server-time-us
-```
-Or use
-
-    kubectl apply -f https://raw.githubusercontent.com/wso2/product-vick/master/samples/cell/example-cell.yaml
-
-### Deploying a Service to the Cell
-
-Apply the following yaml to deploy the service within the cell
-
-```yaml
-apiVersion: vick.wso2.com/v1alpha1
-kind: Service
-metadata:
-  name: server-time-us
-spec:
-  cell: my-cell
-  replicas: 2
-  image: docker.io/mirage20/time-us
-  containerPort: 8080
-  servicePort: 80
-```
-Or use
-
-    kubectl apply -f https://raw.githubusercontent.com/wso2/product-vick/master/samples/cell/example-service.yaml
-
-### Check the deployment using kubectl
-
-Get cells
-
-    kubectl get cells
-
-Get services
-
-    kubectl get vsvc
+    curl https://raw.githubusercontent.com/wso2/product-vick/master/system/scripts/all-in-one-installer/vick-setup-all-in-one.sh | bash -s -- kubeadm
     
-Verify the created pods
-
-    kubectl get pods
-    
-### Access the service within the Cluster
-
-SSH into a different pod using
-    
-    kubectl exec -it <pod-name> bash
-
-and send a request
-    
-    curl server-time-us-service
-    
-### Deleting the cell 
-
-NOTE: This will also delete all the services within that cell
-
-    kubectl delete -f https://raw.githubusercontent.com/wso2/product-vick/master/samples/cell/example-cell.yaml
-
 ### Uninstall VICK
 
-    kubectl delete -f https://raw.githubusercontent.com/wso2/product-vick/master/build/target/vick.yaml
+    curl https://raw.githubusercontent.com/wso2/product-vick/master/system/scripts/all-in-one-installer/vick-cleanup.sh | bash -s -- kubeadm
+
+Please refer the [script usage document](./system/scripts/all-in-one-installer/README.md) to find the other K8s based platform support.
+
+## Steps to Deploy a Production Quality VICK Environment
+
+### System Requirements 
+
+* K8s deployment done according to K8s [production guidelines](https://kubernetes.io/docs/setup/scratch/)
+* MySQL 5.7 server access with database and user creation permissions.
+* K8s storage volume compatible network storage (NFS)
+
+### Installing VICK
+Run the following command to install VICK in to the existing K8s cluster. Scrip will be prompt the user for the mysql user and password credentials. Also user has to provide 
+the network file share server IP (NFS) and the data folder path.
+    
+    curl https://raw.githubusercontent.com/wso2/product-vick/master/system/scripts/all-in-one-installer/vick-setup-all-in-one.sh | bash
+    
+### Uninstall VICK
+
+    curl https://raw.githubusercontent.com/wso2/product-vick/master/system/scripts/all-in-one-installer/vick-cleanup.sh | bash
+
+Please refer the [script usage document](./system/scripts/all-in-one-installer/README.md) to find the other K8s based platform support.
+
+
+## Samples
+
+Please see [Employee Portal App](./samples/employee-portal)
+
+<!--
+existing cluster installation
+* Kubernetes v1.11.3 cluster with Istio 1.0.2 installed.
+-->

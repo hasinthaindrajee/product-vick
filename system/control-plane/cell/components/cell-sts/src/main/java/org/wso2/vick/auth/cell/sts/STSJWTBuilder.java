@@ -27,11 +27,10 @@ import com.nimbusds.jose.util.Base64URL;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.apache.commons.lang.StringUtils;
-import org.wso2.vick.auth.cell.CertificateUtils;
+import org.wso2.vick.auth.cell.utils.CertificateUtils;
 import org.wso2.vick.auth.cell.jwks.KeyResolverException;
 
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,7 +54,7 @@ public class STSJWTBuilder {
     private JWSHeader.Builder headerBuilder = new JWSHeader.Builder(JWSAlgorithm.RS256);
     private JWTClaimsSet.Builder claimSetBuilder = new JWTClaimsSet.Builder();
 
-    // By default we set the expiry to be 20mins (So that it will be greater than GatewayCache timeout)
+    // By default we set this to 20m
     private long expiryInSeconds = 1200L;
     private List<String> audience = new ArrayList<>();
     private static String issuer = "https://sts.vick.wso2.com";

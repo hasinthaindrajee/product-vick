@@ -19,11 +19,19 @@
 
 package org.wso2.vick.auth.cell.jwks;
 
+/**
+ * Key Resolver Exception.
+ */
 public class KeyResolverException extends Exception {
 
     public KeyResolverException(String message, Throwable cause) {
 
         super(message, cause);
+    }
+
+    public KeyResolverException(String message) {
+
+        super(message);
     }
 
 }

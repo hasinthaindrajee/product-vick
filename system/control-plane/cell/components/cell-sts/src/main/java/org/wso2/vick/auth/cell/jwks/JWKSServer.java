@@ -22,8 +22,9 @@ package org.wso2.vick.auth.cell.jwks;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
-import org.wso2.vick.auth.cell.CertificateUtils;
-import org.wso2.vick.auth.cell.sts.STSJWTBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.wso2.vick.auth.cell.utils.CertificateUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -34,15 +35,23 @@ import java.text.ParseException;
 
 public class JWKSServer {
 
+    private static final Logger log = LoggerFactory.getLogger(JWKSServer.class);
     private static KeyResolver keyResolver;
+    private int port;
 
-    public static void startServer() throws IOException {
+    public JWKSServer(int port) {
+
+        this.port = port;
+    }
+
+    public void startServer() throws IOException, KeyResolverException {
 
         keyResolver = CertificateUtils.getKeyResolver();
-        HttpServer server = HttpServer.create(new InetSocketAddress(8085), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         HttpContext context = server.createContext("/");
         context.setHandler(JWKSServer::handleRequest);
         server.start();
+        log.info("JWKS endpoint started in port : {}", port);
     }
 
     private static void handleRequest(HttpExchange exchange) throws IOException {

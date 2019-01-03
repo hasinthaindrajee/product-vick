@@ -23,12 +23,30 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 
+/**
+ * Resolves private keys, public keys and respective certificate of the system.
+ */
 public interface KeyResolver {
 
+    /**
+     * Returns the private key of the system.
+     * @return Private Key.
+     * @throws KeyResolverException KeyResolverException.
+     */
     public PrivateKey getPrivateKey() throws KeyResolverException;
 
+    /**
+     * Returns the public key of the system.
+     * @return Public Key.
+     * @throws KeyResolverException KeyResolverException.
+     */
     public PublicKey getPublicKey() throws KeyResolverException;
 
+    /**
+     * Returns the private key of the system.
+     * @return Private Key.
+     * @throws KeyResolverException KeyResolverException.
+     */
     public X509Certificate getCertificate() throws KeyResolverException;
 
 }

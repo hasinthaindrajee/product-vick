@@ -37,12 +37,6 @@ public class JWKSourceDataProvider {
 
     private static final int DEFAULT_HTTP_CONNECTION_TIMEOUT = 1000;
     private static final int DEFAULT_HTTP_READ_TIMEOUT = 1000;
-    private static final String HTTP_CONNECTION_TIMEOUT_XPATH = "JWTValidatorConfigs.JWKSEndpoint" +
-            ".HTTPConnectionTimeout";
-    private static final String HTTP_READ_TIMEOUT_XPATH = "JWTValidatorConfigs.JWKSEndpoint" +
-            ".HTTPReadTimeout";
-    private static final String HTTP_SIZE_LIMIT_XPATH = "JWTValidatorConfigs.JWKSEndpoint" +
-            ".HTTPSizeLimit";
     private static final Log log = LogFactory.getLog(JWKSourceDataProvider.class);
 
     private static JWKSourceDataProvider jwkSourceDataProvider = new JWKSourceDataProvider();
