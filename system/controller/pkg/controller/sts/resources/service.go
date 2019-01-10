@@ -51,10 +51,10 @@ func CreateTokenServiceK8sService(tokenService *v1alpha1.TokenService) *corev1.S
 					TargetPort: intstr.IntOrString{Type: intstr.Int, IntVal: tokenServiceContainerOutboundPort},
 				},
 				{
-					Name:       jwksEnpoint,
+					Name:       tokenServiceServicePortJWKSName,
 					Protocol:   corev1.ProtocolTCP,
-					Port:       jwksEndpointPort,
-					TargetPort: intstr.IntOrString{Type: intstr.Int, IntVal: jwksEndpointPort},
+					Port:       tokenServiceContainerJWKSPort,
+					TargetPort: intstr.IntOrString{Type: intstr.Int, IntVal: tokenServiceContainerJWKSPort},
 				},
 			},
 			Selector: createTokenServiceLabels(tokenService),
