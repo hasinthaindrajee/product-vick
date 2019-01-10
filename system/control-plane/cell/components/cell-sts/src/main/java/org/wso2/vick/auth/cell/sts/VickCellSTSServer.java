@@ -94,8 +94,7 @@ public class VickCellSTSServer {
                     .setStsEndpoint((String) config.get(CONFIG_STS_ENDPOINT))
                     .setUsername((String) config.get(CONFIG_AUTH_USERNAME))
                     .setPassword((String) config.get(CONFIG_AUTH_PASSWORD))
-                    .setGlobalJWKEndpoint((String) config.get
-                            (CONFIG_GLOBAL_JWKS));
+                    .setGlobalJWKEndpoint((String) config.get(CONFIG_GLOBAL_JWKS));
         } catch (ParseException | IOException e) {
             throw new VickCellSTSException("Error while setting up STS configurations", e);
         }

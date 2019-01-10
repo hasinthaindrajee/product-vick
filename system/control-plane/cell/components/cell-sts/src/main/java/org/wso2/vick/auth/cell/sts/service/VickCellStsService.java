@@ -73,7 +73,8 @@ public class VickCellStsService {
     private static CellStsConfiguration cellStsConfiguration;
 
     public VickCellStsService(CellStsConfiguration stsConfig,
-                              UserContextStore contextStore, UserContextStore localContextStore) throws VickCellSTSException {
+                              UserContextStore contextStore, UserContextStore localContextStore)
+            throws VickCellSTSException {
 
         this.userContextStore = contextStore;
         cellStsConfiguration = stsConfig;

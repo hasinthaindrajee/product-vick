@@ -19,6 +19,9 @@
 
 package org.wso2.vick.auth.cell.sts.exception;
 
+/**
+ * Checked exception for token validation.
+ */
 public class TokenValidationFailureException extends Exception {
 
     public TokenValidationFailureException(String errorMessage, Throwable throwable) {

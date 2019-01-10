@@ -139,17 +139,18 @@ public class SelfContainedTokenValidator implements TokenValidator {
     private int resolvePort(String cellName) {
 
         int port = 8090;
-        switch (cellName) {
-            case "hr":
-                port = 8090;
-                break;
-            case "employee":
-                port = 8091;
-                break;
-            case "stock-options":
-                port = 8092;
-                break;
-        }
+        // Keep this commented code for the easiness of testing.
+//        switch (cellName) {
+//            case "hr":
+//                port = 8090;
+//                break;
+//            case "employee":
+//                port = 8091;
+//                break;
+//            case "stock-options":
+//                port = 8092;
+//                break;
+//        }
         return port;
     }
 }

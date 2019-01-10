@@ -33,6 +33,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.text.ParseException;
 
+/**
+ * Minimal server which responds to JWKS requests. This will expose the STSes JWKS endpoint
+ */
 public class JWKSServer {
 
     private static final Logger log = LoggerFactory.getLogger(JWKSServer.class);

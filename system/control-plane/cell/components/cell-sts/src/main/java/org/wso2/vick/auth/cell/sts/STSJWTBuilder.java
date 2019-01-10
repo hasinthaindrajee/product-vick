@@ -27,8 +27,9 @@ import com.nimbusds.jose.util.Base64URL;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.apache.commons.lang.StringUtils;
-import org.wso2.vick.auth.cell.utils.CertificateUtils;
 import org.wso2.vick.auth.cell.jwks.KeyResolverException;
+import org.wso2.vick.auth.cell.sts.service.VickCellSTSException;
+import org.wso2.vick.auth.cell.utils.CertificateUtils;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateEncodingException;
@@ -108,26 +109,14 @@ public class STSJWTBuilder {
         return this;
     }
 
-    private JWSHeader buildJWSHeader() {
+    public String build() throws VickCellSTSException {
 
-        String certThumbPrint = null;
+        JWSHeader jwsHeader = null;
         try {
-            certThumbPrint = CertificateUtils.getThumbPrint(CertificateUtils.getKeyResolver().getCertificate());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (CertificateEncodingException e) {
-            e.printStackTrace();
-        } catch (KeyResolverException e) {
-            e.printStackTrace();
+            jwsHeader = buildJWSHeader();
+        } catch (KeyResolverException | CertificateEncodingException | NoSuchAlgorithmException e) {
+            throw new VickCellSTSException("Error while building JWS header", e);
         }
-        headerBuilder.keyID(certThumbPrint);
-        headerBuilder.x509CertThumbprint(new Base64URL(certThumbPrint));
-        return headerBuilder.build();
-    }
-
-    public String build() {
-
-        JWSHeader jwsHeader = buildJWSHeader();
         // Add mandatory claims
         addMandatoryClaims(claimSetBuilder);
         JWTClaimsSet claimsSet = this.claimSetBuilder.build();
@@ -137,13 +126,20 @@ public class STSJWTBuilder {
         try {
             JWSSigner signer = new RSASSASigner(CertificateUtils.getKeyResolver().getPrivateKey());
             signedJWT.sign(signer);
-        } catch (JOSEException e) {
-            e.printStackTrace();
-        } catch (KeyResolverException e) {
-            e.printStackTrace();
+        } catch (JOSEException | KeyResolverException e) {
+            throw new VickCellSTSException("Error while signing JWT", e);
         }
         return signedJWT.serialize();
+    }
 
+    private JWSHeader buildJWSHeader() throws KeyResolverException, CertificateEncodingException,
+            NoSuchAlgorithmException {
+
+        String certThumbPrint = null;
+        certThumbPrint = CertificateUtils.getThumbPrint(CertificateUtils.getKeyResolver().getCertificate());
+        headerBuilder.keyID(certThumbPrint);
+        headerBuilder.x509CertThumbprint(new Base64URL(certThumbPrint));
+        return headerBuilder.build();
     }
 
     private void addMandatoryClaims(JWTClaimsSet.Builder claimsSet) {

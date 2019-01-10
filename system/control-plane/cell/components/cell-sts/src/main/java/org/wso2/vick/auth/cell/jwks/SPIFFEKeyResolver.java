@@ -29,9 +29,31 @@ import java.security.cert.X509Certificate;
  */
 public class SPIFFEKeyResolver extends StaticKeyResolver {
 
+    // Sample SPIFFE public certificate string
+    private static String publicKeyString = "-----BEGIN CERTIFICATE-----\n" +
+            "MIIDJjCCAg6gAwIBAgIRANmawRKKvf2ZSIXfzIXpj9cwDQYJKoZIhvcNAQELBQAw\n" +
+            "HDEaMBgGA1UEChMRazhzLmNsdXN0ZXIubG9jYWwwHhcNMTgxMTIzMTAyNDU2WhcN\n" +
+            "MTkwMjIxMTAyNDU2WjALMQkwBwYDVQQKEwAwggEiMA0GCSqGSIb3DQEBAQUAA4IB\n" +
+            "DwAwggEKAoIBAQCdWHtkvQop9FJrPQ6MgIkdxBBSSyuT38VXxkfp7bx8bU/HEImg\n" +
+            "UUpuH60MXJSAWh3CQ2lbjcwCupt94QSDu3bL9qfhekbRcrduwY6lZWD+nx9Yy3gL\n" +
+            "8dukUozFJHAUYIpwa4Sjjrt28zWxMQnQ6/tGqUPXzD2NYZyQmQM0ZngUq/34ypoz\n" +
+            "CUrWaPCsHnYYSKfHPb0xcoCSg3vZpNlsyqX8qaisCEFSVI4psuB6ktGBJ2bVfhQS\n" +
+            "3RlvncpEd+6gaKrTS3i9b4hdvhPHOkwpvyF9jkNu4QWTRmq1/7j+ptLvNatqNEIW\n" +
+            "IPO0McQcnMAvwb1IuuQQKmbgmR36d/4m9yuNAgMBAAGjdDByMA4GA1UdDwEB/wQE\n" +
+            "AwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDAYDVR0TAQH/BAIw\n" +
+            "ADAzBgNVHREELDAqhihzcGlmZmU6Ly9jbHVzdGVyLmxvY2FsL25zL2Zvby9zYS9k\n" +
+            "ZWZhdWx0MA0GCSqGSIb3DQEBCwUAA4IBAQBD24+bdQ6n43soOZsjqf1OA3/3WNiE\n" +
+            "IL+GANg1jDDjYJw+gjl2RNa+EJNoHGdJ9x4X3U9dFkHzSF7/sa4Wr5wa5Ztkn9dN\n" +
+            "PS7srNjplfoeIDW7y9uqlept1hU/8LL9J4PKzHWQtRYrbwmyJ1cql3rubrGSRjSu\n" +
+            "nO7xDZGl6H33UhWnFT3zJYPJ7+mY6jxgyhYxoNylC1pQFloWGmjf3Q33LYXcawJN\n" +
+            "9qqHgRbvo9RTMHrPqk/9mDl5KLhQr//d3K+rBfO9A7MjAaKk+/1SQHCd9DwLyAlL\n" +
+            "gZwKV3qnWX9WAevQJPHiQ0KIBAUwygm8iUlp+6x7fpCIrH/sKZCFpzNa\n" +
+            "-----END CERTIFICATE-----\n";
+
     @Override
     public PrivateKey getPrivateKey() {
 
+        // No private key.
         return null;
     }
 
@@ -39,7 +61,7 @@ public class SPIFFEKeyResolver extends StaticKeyResolver {
     public PublicKey getPublicKey() throws KeyResolverException {
 
         try {
-            return buildCertificate(Constants.publicKeyString).getPublicKey();
+            return buildCertificate(publicKeyString).getPublicKey();
         } catch (CertificateException e) {
             throw new KeyResolverException("Error while retrieving public key", e);
         }
@@ -49,7 +71,7 @@ public class SPIFFEKeyResolver extends StaticKeyResolver {
     public X509Certificate getCertificate() throws KeyResolverException {
 
         try {
-            return (X509Certificate) buildCertificate(Constants.publicKeyString);
+            return (X509Certificate) buildCertificate(publicKeyString);
         } catch (CertificateException e) {
             throw new KeyResolverException("Error while building certificate", e);
         }

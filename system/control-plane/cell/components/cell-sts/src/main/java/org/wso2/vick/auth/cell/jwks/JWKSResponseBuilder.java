@@ -33,11 +33,23 @@ import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
 
+/**
+ * Builds the JWKS response in a JSON format by retrieving relevant keys.
+ */
 public class JWKSResponseBuilder {
 
+    /**
+     * Builds the JSON response of JWKS.
+     *
+     * @param publicKey   Public Key which should be included in the jwks response.
+     * @param certificate Certificate which should be in the jwks response.
+     * @return JSON JWKS response.
+     * @throws CertificateException
+     * @throws NoSuchAlgorithmException
+     * @throws ParseException
+     */
     public static String buildResponse(PublicKey publicKey, Certificate certificate) throws CertificateException,
-            NoSuchAlgorithmException,
-            ParseException {
+            NoSuchAlgorithmException, ParseException {
 
         String KEY_USE = "sig";
         String KEYS = "keys";
